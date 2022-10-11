@@ -8,7 +8,15 @@ const routes: Array<RouteConfig> = [
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: Home,
+    children: 
+    [
+      {
+        path: '/query',
+        name: 'Query',
+        component: ()=> import('@/views/query/index.vue')
+      }
+    ]
   },
   {
     path: '/about',

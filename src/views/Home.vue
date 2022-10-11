@@ -12,6 +12,12 @@
     color: @itemColor;
   }
 }
+
+// 解决元素塌陷问题
+.router-view{
+  height: calc(100vh - 46px);
+  overflow: hidden;
+}
 </style>
 
 <template>
@@ -31,7 +37,7 @@
     </nut-popup>
 
     <!-- 路由出口 -->
-    <router-view style="height: calc(100vh - 46px)"></router-view>
+    <router-view class="router-view"></router-view>
   </div>
 </template>
 
