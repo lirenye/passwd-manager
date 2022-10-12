@@ -6,11 +6,6 @@ import router from './router'
 import Vant from 'vant';
 Vue.use(Vant);
 
-// nutui UI
-import NutUI from '@nutui/nutui';
-
-NutUI.install(Vue);
-
 // axios
 import instance from '@/utils/axios';
 Vue.prototype.$axios = instance;

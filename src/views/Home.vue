@@ -23,18 +23,14 @@
 <template>
   <div class="home">
     <!-- 顶部导航栏 -->
-    <van-nav-bar title="标题" left-text="返回" left-arrow>
-      <template #right>
-        <van-icon name="bars" size="26" @click="sideNavBar = true" />
-      </template>
-    </van-nav-bar>
+    <van-nav-bar
+      :title="NavBarTitle"
+      right-text="退出"
+      :left-arrow="isBack"
 
-    <!-- 侧边菜单栏 -->
-    <nut-popup position="right" v-model="sideNavBar" :style="{ width, height }">
-      <nut-sidenavbar :show="sideNavBar">
-        <nut-sidenavbaritem v-for="(v) in menu" @click="handleClick(v.path)" :title="v.title" :key="v.path"></nut-sidenavbaritem>
-      </nut-sidenavbar>
-    </nut-popup>
+      @click-right="outLogin"
+      @click-left="back"
+    />
 
     <!-- 路由出口 -->
     <router-view class="router-view"></router-view>
@@ -51,6 +47,16 @@ export default class Home extends Vue {
     { path: '/add', title: '添加账号信息'},
     { path: '/user', title: '个人中心'}
   ];
+
+  // 后退按钮状态控制
+  get isBack(){
+    return (this.$route.path !== '/')
+  }
+
+  // 导航栏标题
+  get NavBarTitle(){
+    return this.$route.meta!.title;
+  }
   
   sideNavBar = false;
   width = '60%';
@@ -61,6 +67,17 @@ export default class Home extends Vue {
     this.sideNavBar = false;
     // this.$router.push(path)
     console.log(`go to ${path}`);
+  }
+
+  // out login handle
+  outLogin(){
+    sessionStorage.removeItem('token');
+    this.$router.replace('/login');
+  };
+
+  // 返回上个页面
+  back(){
+    this.$router.go(-1);
   }
 }
 </script>

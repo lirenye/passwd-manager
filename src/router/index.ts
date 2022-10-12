@@ -7,13 +7,23 @@ Vue.use(VueRouter)
 const routes: Array<RouteConfig> = [
   {
     path: '/',
-    name: 'Home',
     component: Home,
     children: 
     [
       {
+        path: '',
+        name: 'Home',
+        meta: {
+          title: '密码管理'
+        },
+        component: ()=> import('@/views/Default.vue')
+      },
+      {
         path: '/query',
         name: 'Query',
+        meta: {
+          title: '查询账户信息'
+        },
         component: ()=> import('@/views/query/index.vue')
       }
     ]
