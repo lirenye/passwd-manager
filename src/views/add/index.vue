@@ -75,12 +75,11 @@ export default class Add extends Vue {
   }
 
   // go commit account info
-  onSubmit(){
-    this.$axios.get('/account/test')
-    .then(res=>{
-      console.log(res);
-      
-    })
+  async onSubmit(){
+    const { data: res} = await this.$axios.post('/account/add', this.account);
+    if(res.meta.status !== 200) return this.$notify({type: 'warning', message: res.meta.msg});
+    this.$notify({type: 'success', message: res.meta.msg});
+    this.$router.go(-1);
   }
 }
 </script>
