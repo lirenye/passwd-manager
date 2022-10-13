@@ -25,6 +25,14 @@ const routes: Array<RouteConfig> = [
           title: '查询账户信息'
         },
         component: ()=> import('@/views/query/index.vue')
+      },
+      {
+        path: '/add',
+        name: 'Add',
+        meta: {
+          title: '添加账户信息'
+        },
+        component: ()=> import('@/views/add/index.vue')
       }
     ]
   },
