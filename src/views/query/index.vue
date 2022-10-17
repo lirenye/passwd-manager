@@ -144,7 +144,7 @@ export default class Query extends Vue {
     this.accountInfo = [];
 
     this.clearData = setTimeout(async ()=>{
-      if(!this.queryInfo.value) return;
+      if(!this.queryInfo.value.length) return;
 
       const {data: res} = await this.$axios.get('/account/info',{ params: this.queryInfo});
       this.accountInfo = res.data;
@@ -163,13 +163,22 @@ export default class Query extends Vue {
     }).then(()=>{
       this.accountInfo.splice(index, 1);
       this.$notify({type: 'primary', message: '删除成功', duration: 1200});
-    })
+    });
   };
 
   // modify account info
   modifyAccount(index:number){
+    const account: Accounts = this.accountInfo[index];
     this.goModify = true;
-    this.$router.push({path: '/modify'});
+    this.$router.push({path: '/modify', query: {
+      _id: account._id,
+      platform: account.platform,
+      username: account.username,
+      password: account.password,
+      email: account.email,
+      mobile: account.mobile,
+      remark: account.remark
+    }});
   };
 
   // is go modify
@@ -182,6 +191,13 @@ export default class Query extends Vue {
   };
   activated(){
     this.goModify = false;
+    // if modified account info and status is success, requred reload account info
+    if(this.queryInfo.value.length){
+      this.$axios.get('/account/info', { params: this.queryInfo })
+      .then(({ data: res }) => {
+        this.accountInfo = res.data
+      });
+    }
   }
 }
 </script>
