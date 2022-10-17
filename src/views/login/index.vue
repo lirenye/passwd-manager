@@ -80,7 +80,7 @@ export default class Login extends Vue {
     
     // login ok
     sessionStorage.setItem('token', res.data.token);
-    this.$notify({ type: 'success', message: res.meta.msg });
+    this.$notify({ type: 'success', message: res.meta.msg, duration:1000 });
     this.$router.push('/');
   }
 }

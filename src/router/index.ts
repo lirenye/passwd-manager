@@ -33,6 +33,14 @@ const routes: Array<RouteConfig> = [
           title: '添加账户信息'
         },
         component: ()=> import('@/views/add/index.vue')
+      },
+      {
+        path: '/modify',
+        name: 'Modify',
+        meta: {
+          title: '修改账户信息'
+        },
+        component: ()=> import('@/views/modify/index.vue')
       }
     ]
   },

@@ -31,9 +31,11 @@
       @click-right="outLogin"
       @click-left="back"
     />
-
+    
     <!-- 路由出口 -->
-    <router-view class="router-view"></router-view>
+    <keep-alive include="Query">
+      <router-view class="router-view" />
+    </keep-alive>
   </div>
 </template>
 

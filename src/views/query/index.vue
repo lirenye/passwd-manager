@@ -1,6 +1,44 @@
 <style lang='less' scoped>
-.van-button{
+.card {
+  // position: absolute;
+  // top: 50%;
+  // left: 50%;
+  // transform: translate(-50%, -60%);
+  margin: 12px auto;
+
+  width: 90%;
+  height: 80%;
+  padding: 21px;
+  border-radius: 10px;
+  box-sizing: border-box;
+  box-shadow: 0 35px 80px 20px rgba(1, 34, 251, 0.15);
+
+  overflow: scroll;
+}
+.types-button{
   margin: 10px 0;
+}
+
+.accout-platform{
+  text-align: left;
+  font-size: 16px;
+
+  span{
+    font-weight: 700;
+    color: rgb(51, 138, 220);
+  }
+}
+
+.info{
+
+  p{
+    text-align: left;
+
+    span{
+      font-weight: 600;
+      color: rgb(51, 138, 220);
+    }
+  }
 }
 </style>
 
@@ -14,18 +52,66 @@
         <van-search @input="inputHandle" v-model="queryInfo.value" placeholder="请输入搜索关键词" />
       </van-col>
       <van-col :span="6">
-        <van-button plain type="info" size="small" @click="actionSheetStatus = true">{{queryTypes[btnIndex].name}}</van-button>
+        <van-button class="types-button" plain type="info" size="small" @click="actionSheetStatus = true">{{queryTypes[btnIndex].name}}</van-button>
       </van-col>
     </van-row>
+    <!-- show zone -->
+    <div class="card">
+      <van-collapse v-if="accountInfo.length" v-model="activeNames" accordion>
+        <van-swipe-cell v-for="(account, index) in accountInfo" :key="account._id" >
+          <template #left>
+            <van-button square type="primary" text="选择" />
+          </template>
+          <!-- <van-cell :border="false" title="单元格" value="内容" /> -->
+          <van-collapse-item :name="index">
+            <template #title>
+              <div class="accout-platform">平台名称：<span>{{account.platform}}</span></div>
+            </template>
+            <div class="info">
+              <p>用户名：<span>{{account.username}}</span></p>
+              <p>密码：<span>{{account.password}}</span></p>
+              <p>电子邮箱：<span>{{account.email}}</span></p>
+              <p>电话号码：<span>{{account.mobile}}</span></p>
+              <p>备注信息：<span>{{account.remark}}</span></p>
+            </div>
+          </van-collapse-item>
+          <template #right>
+            <van-button square type="danger" text="删除" @click="deleteAccount(account, index)" />
+            <van-button square type="info" text="修改" @click="modifyAccount(index)" />
+          </template>
+        </van-swipe-cell>
+      </van-collapse>
+      <van-empty v-else description="没有信息" />
+    </div>
   </div>
 </template>
 
 <script lang='ts'>
 import { Component, Vue } from 'vue-property-decorator';
 
+interface IQeuryInfo {
+  type: string;
+  value: string;
+}
+interface IQeuryData {
+  [key:string]: any
+}
+interface Accounts {
+  _id: string;
+  author: string;
+  platform: string;
+  username: string;
+  password: string;
+  email: string;
+  mobile: string;
+  remark: string;
+  _v?: 0
+}
 @Component
 export default class Query extends Vue {
-  queryInfo = {type: 'platfrom', value: ''};
+  // account infos
+  accountInfo:Array<Accounts> = [];
+  queryInfo:IQeuryInfo = {type: 'platform', value: ''};
   // type select button title 
   btnIndex = 0;
   // action sheet control status
@@ -33,7 +119,12 @@ export default class Query extends Vue {
   // action sheet title description
   actionSheetDesc = '选择搜索类型';
   // query info types
-  color = '#1E90FF'
+  color = '#1E90FF';
+
+  // account data
+  accounts = []
+  activeNames = '0'
+
   queryTypes = [
     { name: '平台名称', obj: 'platform', color: this.color },
     { name: '电话号码', obj: 'mobile', color: this.color },
@@ -51,12 +142,48 @@ export default class Query extends Vue {
   // query input change event handle
   inputHandle(){
     if(this.clearData) clearTimeout(this.clearData);
+    // clear last time account infos
+    this.accountInfo = [];
 
-    this.clearData = setTimeout(()=>{
-      console.log(this.queryInfo);
+    this.clearData = setTimeout(async ()=>{
+      if(!this.queryInfo.value) return;
+
+      const {data: res} = await this.$axios.get('/account/info',{ params: this.queryInfo});
+      this.accountInfo = res.data;
+      console.log(res);
+      
       this.clearData = 0;
     }, 600);
     
+  };
+
+  // delete account info
+  deleteAccount(account:Accounts, index: number){
+    this.$dialog.confirm({
+      title: '确定删除账户信息',
+      message: account.platform
+    }).then(()=>{
+      this.accountInfo.splice(index, 1);
+      this.$notify({type: 'primary', message: '删除成功', duration: 1200});
+    })
+  };
+
+  // modify account info
+  modifyAccount(index:number){
+    this.goModify = true;
+    this.$router.push({path: '/modify'});
+  };
+
+  // is go modify
+  goModify = false;
+  // deactivated
+  deactivated(){
+    if(this.goModify) return;
+    this.accountInfo = [];
+    this.queryInfo.value = '';
+  };
+  activated(){
+    this.goModify = false;
   }
 }
 </script>
