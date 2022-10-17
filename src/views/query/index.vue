@@ -160,9 +160,15 @@ export default class Query extends Vue {
     this.$dialog.confirm({
       title: '确定删除账户信息',
       message: account.platform
-    }).then(()=>{
+    }).then(async ()=>{
+      // validation
+      if(account._id !== this.accountInfo[index]._id) return this.$notify({type: 'warning', message: '删除失败', duration: 1200});
+
+      const {data: res} = await this.$axios.get('/account/delete', {params: {_id: account._id}});
+      if (res.meta.status !== 200) return this.$notify({ type: 'warning', message: res.meta.msg, duration: 1200 });
+
       this.accountInfo.splice(index, 1);
-      this.$notify({type: 'primary', message: '删除成功', duration: 1200});
+      this.$notify({type: 'primary', message: res.meta.msg, duration: 1000});
     });
   };
 
