@@ -55,6 +55,7 @@
         <van-button class="types-button" plain type="info" size="small" @click="actionSheetStatus = true">{{queryTypes[btnIndex].name}}</van-button>
       </van-col>
     </van-row>
+
     <!-- show zone -->
     <div class="card">
       <van-collapse v-if="accountInfo.length" v-model="activeNames" accordion>
@@ -92,9 +93,6 @@ import { Component, Vue } from 'vue-property-decorator';
 interface IQeuryInfo {
   type: string;
   value: string;
-}
-interface IQeuryData {
-  [key:string]: any
 }
 interface Accounts {
   _id: string;

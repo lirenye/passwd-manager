@@ -33,7 +33,7 @@ div{
         <van-field v-model="account.email" @blur="clearErrorMessage" :maxlength="maxlength.email" clearable name="email" label="邮箱地址" placeholder="邮箱地址"
           :rules="[]" />
         <van-field v-model="account.mobile" @blur="clearErrorMessage" :maxlength="maxlength.mobile" clearable name="mobile" label="电话号码" placeholder="电话号码"
-          :rules="[{required: false},{pattern: /\d{11}/, message: '必须11个数字'}]" />
+          :rules="[{validator: mobileRule, message: '请填写正确电话号码'}]" />
         <van-field v-model="account.remark" @blur="clearErrorMessage" :maxlength="maxlength.remark" clearable name="remark" rows="2" autosize label="备注信息" type="textarea" placeholder="请输入备注信息"
           show-word-limit />
         <div style="margin: 18px;">
@@ -66,6 +66,12 @@ export default class Add extends Vue {
     email: 20,
     mobile: 11,
     remark: 30
+  }
+
+  // mobile input value validtion
+  mobileRule(value: string){
+    if(!value.length) return true;
+    return new RegExp("\\d{11}").test(value);
   }
 
   // field value to empty clear error message
