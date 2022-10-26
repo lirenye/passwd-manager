@@ -72,7 +72,9 @@ export default class Home extends Vue {
   }
 
   // out login handle
-  outLogin(){
+  async outLogin(){
+    const {data: res} = await this.$axios.get('/outlogin');
+    if (res && res.meta.status ===  200) this.$notify({type: 'success', message: res.meta.msg, duration: 1000});
     sessionStorage.removeItem('token');
     this.$router.replace('/login');
   };
