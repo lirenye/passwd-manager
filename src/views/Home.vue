@@ -44,11 +44,6 @@ import { Component, Vue } from 'vue-property-decorator';
 
 @Component
 export default class Home extends Vue {
-  // menu data
-  menu = [
-    { path: '/add', title: '添加账号信息'},
-    { path: '/user', title: '个人中心'}
-  ];
 
   // 后退按钮状态控制
   get isBack(){

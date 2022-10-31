@@ -41,6 +41,14 @@ const routes: Array<RouteConfig> = [
           title: '修改账户信息'
         },
         component: ()=> import('@/views/modify/index.vue')
+      },
+      {
+        path: '/user',
+        name: 'User',
+        meta: {
+          title: '用户中心',
+        },
+        component: ()=> import('@/views/user/index.vue')
       }
     ]
   },
