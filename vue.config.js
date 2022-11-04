@@ -2,9 +2,11 @@
 module.exports = {
   chainWebpack: config =>{
     config.when(process.env.NODE_ENV === 'production', config=>{
-      // config.set('externals', {
-
-      // })
+      config.set('externals', {
+        vue: 'Vue',
+        'vue-router': 'VueRouter',
+        axios: 'axios'
+      })
 
       config.plugin('html').tap(args =>{
         args[0].isProd = true;
