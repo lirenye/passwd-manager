@@ -4,7 +4,7 @@ import router from './router'
 
 // Vant UI
 import Vant from 'vant';
-import 'vant/lib/index.css';
+// import 'vant/lib/index.css';
 Vue.use(Vant);
 
 // axios
