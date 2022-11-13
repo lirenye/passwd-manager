@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig} from "axios";
+import axios, { AxiosError} from "axios";
 import router from "@/router";
 import { Notify } from "vant";
 
@@ -13,14 +13,14 @@ instance.interceptors.request.use(config =>{
 });
 
 instance.interceptors.response.use(response =>{
-  const {data: res} = response;
-  if(res.meta.status === 401) {
+  return response;
+}, (error: AxiosError) =>{
+  if(error.response?.status === 401){
     sessionStorage.removeItem('token');
     router.replace('/login');
-    Notify({type:'warning', message: '认证过期', duration: 1200});
-    return Promise.reject(response);
+    Notify({type: 'warning', message: <string>error.response.data, duration: 1200});
   };
-  return response;
+  return Promise.reject(error);
 })
 
 export default instance;
