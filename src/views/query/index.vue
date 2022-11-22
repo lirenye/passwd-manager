@@ -145,11 +145,9 @@ export default class Query extends Vue {
 
     this.clearData = setTimeout(async ()=>{
       if(!this.queryInfo.value.length) return;
-
-      const {data: res} = await this.$axios.get('/account/info',{ params: this.queryInfo});
-      this.accountInfo = res.data;
-      console.log(res);
-      
+      const { data: res } = await this.$axios.get('/account/info', { params: this.queryInfo });
+      if (res.meta.stauts === 201) return this.$notify({ type: 'warning', message: res.meta.msg, duration: 1200 });
+      this.accountInfo = res.data || [];
       this.clearData = 0;
     }, 600);
     

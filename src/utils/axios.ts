@@ -12,19 +12,35 @@ const instance = axios.create({
 
 instance.interceptors.request.use((config: AxiosRequestConfig) =>{
   config.headers!['Authorization'] = sessionStorage.getItem('token');
-  
-  // 加密请求数据
   const localTime = new Date().getTime().toString();
   config.headers!['Time'] = localTime;
 
+  
+  // 加密get请求数据
+  if(config.method === 'get') {
+    simpleCrypto.setSecret(localTime);
+    config.params = {data: simpleCrypto.encrypt(config.params)}
+    return config;
+  };
+
+
+  // 加密post请求数据
   simpleCrypto.setSecret(localTime);
   config.data = {
     data: simpleCrypto.encrypt(config.data)
   };
+  
   return config;
 });
 
 instance.interceptors.response.use(response =>{
+  console.log(response);
+  if(typeof response.data === 'object') return response;
+
+  const resTime = response.headers.time as string;
+  const resSecret = resTime;
+  simpleCrypto.setSecret(resSecret);
+  response.data  =  simpleCrypto.decrypt(response.data)
   return response;
 }, (error: AxiosError) =>{
   if(error.response?.status === 401){

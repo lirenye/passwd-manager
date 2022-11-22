@@ -79,7 +79,6 @@ export default class Modify extends Vue {
     if (res.meta.status !== 200) return this.$notify({ type: 'warning', message: res.meta.msg });
     this.$notify({ type: 'success', message: res.meta.msg });
     this.$router.go(-1);
-    console.log('修改账户提交：', this.account);
-  }
+  };
 }
 </script>
