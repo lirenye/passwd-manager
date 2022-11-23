@@ -34,7 +34,6 @@ instance.interceptors.request.use((config: AxiosRequestConfig) =>{
 });
 
 instance.interceptors.response.use(response =>{
-  console.log(response);
   if(typeof response.data === 'object') return response;
 
   const resTime = response.headers.time as string;
